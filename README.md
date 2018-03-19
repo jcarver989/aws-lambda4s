@@ -58,6 +58,10 @@ class MyAPI extends LambdaProxyFunction {
 
 ```
 
+## Cool toy examples, but how do I use this in production?
+
+For a more robust example, checkout [aws-lambda4s-example](https://github.com/jcarver989/aws-lambda4s-example) repo. It comes with a complete CloudFormation template, meaning you can run it locally and deploy it to AWS with just a single command using the offical AWS command line tools. You should be able to just clone the repository and have everything you need to start writing Lambda functions.
+
 
 
 
