@@ -16,7 +16,7 @@ This repository contains everything you need to create AWS Lambda functions with
 4. run `sbt assembly` to create your deployable artifact.
 
 
-## Lambdas That Don't Integrate With API Gateway
+## "Normal" Lambdas That Don't Integrate With API Gateway
 
 ```scala
 import com.amazonaws.services.lambda.runtime.Context
@@ -41,16 +41,15 @@ import com.amazonaws.services.lambda.runtime.Context
 import lambda4s._
 
 class MyAPI extends LambdaProxyFunction {
-    implicit val jsonMapper = JSON // automagic case class => to JSON conversions. If you need something custom, extend the JSON trait.
-    private val dbConnection  = ??? // whateve you want
+    private val dbConnection  = ??? // whatever you want
     override def handle(request: Request, context: Context): Response = {
         request match {
             case Get("users", userId) if Route.isId(userId) =>
               val user = dbConnection.findById(userId) // User is a case class, e.g. case class User(id: String, ...)
-              Response(user) // automagically converts a User to JSON
+              Response(body = JSON.toJSON(user)) // automagically converts a User to JSON
             
             case Post("users") =>
-              val user = request.as[User] // automagically conver the request's body from JSON => User
+              val user = JSON.fromJSON[User](request.body) // automagically converts the request's body from JSON => User
               dbConnection.create(user)
               Response(statusCode = 200, body = """{"status": "success"}""")
         }
