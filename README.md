@@ -1,5 +1,64 @@
 
 # Write AWS Lambda Functions In Scala, Easily.
 
+This repository contains everything you need to create AWS Lambda functions with Scala. It includes: 
+
+- Automagically convert Lambda's JSON input and output to/from Scala case classes
+- Logging via AWs Lambda's log4j appender.
+- Support for Lambdas that interface with API Gateway via Proxy integration
+- Dead simple route matching for your Lambda APIs
+
+## Getting Started
+
+1. Add this library as a dependency to your project.
+2. If you're using SBT as your build tool, install the [sbt-assembly](https://github.com/sbt/sbt-assembly) plugin.
+3. Follow one of the examples below
+4. run `sbt assembly` to create your deployable artifact.
+
+
+## Lambdas That Don't Integrate With API Gateway
+
+```scala
+import com.amazonaws.services.lambda.runtime.Context
+import lambda4s._
+
+case class InputItem(sku: String)
+case class OutputItem(name: String, price: Double)
+class MyLambda extends LambdaFunction[InputItem, OutputItem] {
+    private val dbConnection = ??? // whatever you want
+    override def handle(input: InputItem, context: Context): OutputItem = {
+        val product = dbconnection.findById(input.sku)
+        logger.info(s"Found Item ${input.sku}: ${product}") // logger is inherited from base class
+        OutputItem(product.name, product.price)
+    }
+}
+```
+
+## Lambdas That Integrates With API Gateway Via Proxy Integration
+
+```scala
+import com.amazonaws.services.lambda.runtime.Context
+import lambda4s._
+
+class MyAPI extends LambdaProxyFunction {
+    implicit val jsonMapper = JSON // automagic case class => to JSON conversions. If you need something custom, extend the JSON trait.
+    private val dbConnection  = ??? // whateve you want
+    override def handle(request: Request, context: Context): Response = {
+        request match {
+            case Get("users", userId) if Route.isId(userId) =>
+              val user = dbConnection.findById(userId) // User is a case class, e.g. case class User(id: String, ...)
+              Response(user) // automagically converts a User to JSON
+            
+            case Post("users") =>
+              val user = request.as[User] // automagically conver the request's body from JSON => User
+              dbConnection.create(user)
+              Response(statusCode = 200, body = """{"status": "success"}""")
+        }
+    }
+}
+
+```
+
+
 
 
