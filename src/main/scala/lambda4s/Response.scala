@@ -8,8 +8,4 @@ case class Response(
 
 object Response {
   val internalServerError = Response(500, body = "Internal Server Error")
-
-  def apply[T <: AnyRef](item: T)(implicit json: JSON): Response = {
-    Response(200, body = json.toJSON(item))
-  }
 }
