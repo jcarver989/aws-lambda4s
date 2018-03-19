@@ -11,9 +11,9 @@ This repository contains everything you need to create AWS Lambda functions with
 ## Getting Started
 
 1. Add this library as a dependency to your project.
-2. If you're using SBT as your build tool, install the [sbt-assembly](https://github.com/sbt/sbt-assembly) plugin.
-3. Follow one of the examples below
-4. run `sbt assembly` to create your deployable artifact.
+2. Follow one of the examples below
+3. Create a fatjar of your project and upload it to AWS Lambda.
+   -  If using SBT, you can do this easily with the [sbt-assembly](https://github.com/sbt/sbt-assembly) plugin.
 
 
 ## "Normal" Lambdas That Don't Integrate With API Gateway
