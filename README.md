@@ -28,6 +28,7 @@ import lambda4s._
 
 case class InputItem(sku: String)
 case class OutputItem(name: String, price: Double)
+
 class MyLambda extends LambdaFunction[InputItem, OutputItem] {
     private val dbConnection = ??? // whatever you want
     override def handle(input: InputItem, context: Context): OutputItem = {
