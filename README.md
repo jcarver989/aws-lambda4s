@@ -14,7 +14,7 @@ Just add these two lines to your `build.sbt`:
 
 ```scala
 resolvers += Resolver.bintrayRepo("jcarver989", "maven")
-libraryDependencies = "com.jcarver989" %% "aws-lambda4s" % "latest.integration"
+libraryDependencies += "com.jcarver989" %% "aws-lambda4s" % "latest.integration"
 ```
 
 ## Usage 
