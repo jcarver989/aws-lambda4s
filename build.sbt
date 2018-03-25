@@ -1,7 +1,9 @@
 scalaVersion := "2.12.4"
 name := "aws-lambda4s"
+version := "1.0.0"
 organization := "com.jcarver989"
-version := "1.0"
+
+licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))
  
 // Java
 libraryDependencies += "com.amazonaws" % "aws-lambda-java-core" % "latest.integration"
