@@ -10,12 +10,11 @@ This repository contains everything you need to create AWS Lambda functions with
 
 ## Getting Started
 
-Just add this line to your `build.sbt`: 
+Just add these two lines to your `build.sbt`: 
 
 ```scala
-
+resolvers += Resolver.bintrayRepo("jcarver989", "maven")
 libraryDependencies = "com.jcarver989" %% "aws-lambda4s" % "latest.integration"
-
 ```
 
 ## Usage 
