@@ -10,13 +10,17 @@ This repository contains everything you need to create AWS Lambda functions with
 
 ## Getting Started
 
-1. Add this library as a dependency to your project.
-2. Follow one of the examples below
-3. Create a fatjar of your project and upload it to AWS Lambda.
-   -  If using SBT, you can do this easily with the [sbt-assembly](https://github.com/sbt/sbt-assembly) plugin.
+Just add this line to you `build.sbt`: 
 
+```scala
 
-## "Normal" Lambdas That Don't Integrate With API Gateway
+libraryDependencies = "com.jcarver989" %% "aws-lambda4s" % "latest.integration"
+
+```
+
+## Usage 
+
+### Lambdas That Don't Integrate With API Gateway
 
 ```scala
 import com.amazonaws.services.lambda.runtime.Context
@@ -34,7 +38,7 @@ class MyLambda extends LambdaFunction[InputItem, OutputItem] {
 }
 ```
 
-## Lambdas That Integrates With API Gateway Via Proxy Integration
+###  Lambdas That Integrate With API Gateway Via Proxy Integration
 
 ```scala
 import com.amazonaws.services.lambda.runtime.Context
@@ -60,8 +64,6 @@ class MyAPI extends LambdaProxyFunction {
 
 ## Cute Toy Examples - But How Do I Use This In Production?
 
-For a more robust example, checkout [aws-lambda4s-example](https://github.com/jcarver989/aws-lambda4s-example) repo. It comes with a complete CloudFormation template, meaning you can run it locally and deploy it to AWS with just a single command using the offical AWS command line tools. You should be able to just clone the repository and have everything you need to start writing Lambda functions.
+To deploy to AWS you'll need to create a "fat jar". If using SBT, you can do this easily using the [sbt-assembly](https://github.com/sbt/sbt-assembly) plugin.
 
-
-
-
+For a complete deployable example, checkout [aws-lambda4s-example](https://github.com/jcarver989/aws-lambda4s-example) repo. It comes with a complete CloudFormation template, meaning you can run it locally and deploy it to AWS with just a single command using the offical AWS command line tools. You should be able to just clone the repository and have everything you need to start writing Lambda functions.
