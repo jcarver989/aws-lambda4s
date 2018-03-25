@@ -10,7 +10,7 @@ This repository contains everything you need to create AWS Lambda functions with
 
 ## Getting Started
 
-Just add this line to you `build.sbt`: 
+Just add this line to your `build.sbt`: 
 
 ```scala
 
