@@ -23,6 +23,7 @@ abstract class LambdaFunction[T <: AnyRef: Manifest, U <: AnyRef] extends Reques
 
   override final def handleRequest(input: InputStream, output: OutputStream, context: Context): Unit = {
     val json = IOUtils.toString(input, StandardCharsets.UTF_8)
+    logger.info(s"Raw Request Recieved: ${json}")
     input.close()
     val request = jsonSerializer.fromJSON[T](json)
     val response = jsonSerializer.toJSON(handle(request, context))
