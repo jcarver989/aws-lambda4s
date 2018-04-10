@@ -5,9 +5,9 @@ case class Request(
   path:                  String              = "",
   httpMethod:            String              = "",
   headers:               Map[String, String] = Map(),
-  queryStringParameters: Map[String, String] = Map(),
-  pathParameters:        Map[String, String] = Map(),
-  stageVariables:        Map[String, String] = Map(),
+  queryStringParameters: Option[Map[String, String]] = None,
+  pathParameters:        Option[Map[String, String]] = None,
+  stageVariables:        Option[Map[String, String]] = None,
   requestContext:        RequestContext      = RequestContext(),
   body:                  String              = "",
   isBase64Encoded:       Boolean             = false) {

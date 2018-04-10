@@ -37,4 +37,66 @@ class JSONTest extends FlatSpec with Matchers {
     JSON.fromJSON[User](json) should be(person)
   }
 
+  // from a real Lambda request, with PII scrubbed
+  it should "serialize lambda response" in {
+    val json = """{
+       "resource":"/api/v1/{proxy+}",
+       "path":"/foo/bar/baz",
+       "httpMethod":"GET",
+       "headers":{
+         "Accept":"application/json",
+         "Accept-Encoding":"br, gzip, deflate",
+         "Accept-Language":"en-us",
+         "CloudFront-Forwarded-Proto":"https",
+         "CloudFront-Is-Desktop-Viewer":"true",
+         "CloudFront-Is-Mobile-Viewer":"false",
+         "CloudFront-Is-SmartTV-Viewer":"false",
+         "CloudFront-Is-Tablet-Viewer":"false",
+         "CloudFront-Viewer-Country":"US",
+         "content-type":"application/json",
+         "Host":"api.qwillapp.com",
+         "User-Agent":"User Agent 5.0",
+         "Via":"2.0 abdcd.cloudfront.net (CloudFront)",
+         "X-Amz-Cf-Id":"ID",
+         "X-Amzn-Trace-Id":"Root-DD",
+         "X-Forwarded-For":"123.456, 78.123",
+         "X-Forwarded-Port":"443","X-Forwarded-Proto":"https"
+         },
+         "queryStringParameters":null,
+         "pathParameters":{"proxy":"foo/bar/baz"},
+         "stageVariables":null,
+         "requestContext":{
+         "resourceId":"imAnId",
+         "resourcePath":"/api/v1/{proxy+}",
+         "httpMethod":"GET",
+         "extendedRequestId":"abcd",
+         "requestTime":"01/Jan/2018:00:00:00 +0000",
+         "path":"/api/foo/bar",
+         "accountId":"1234",
+         "protocol":"HTTP/1.1",
+         "stage":"dev",
+         "requestTimeEpoch":1000,
+         "requestId":"abcd",
+         "identity":{
+         "cognitoIdentityPoolId":null,
+         "accountId":null,
+         "cognitoIdentityId":null,
+         "caller":null,
+         "sourceIp":"123.456",
+         "accessKey":null,
+         "cognitoAuthenticationType":null,
+         "cognitoAuthenticationProvider":null,
+         "userArn":null,
+         "userAgent":"Foo/1 CFNetwork/1 Darwin/2.1.0",
+         "user":null
+         },
+         "apiId":"123"
+         },
+         "body":null,
+         "isBase64Encoded":false
+         }"""
+
+    noException should be thrownBy { JSON.fromJSON[Request](json)}
+  }
+
 }
