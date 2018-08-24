@@ -27,4 +27,4 @@ trait CaseObject[T] {
 /** Allows for (de)serializing a case object to/from JSON, so long as the case object Foo extends CaseObject[Foo] & it implements the fromJSON method */
 class CaseObjectSerializer[T: Manifest](obj: CaseObject[T]) extends CustomSerializer[T](format => (
   { case JString(status) => obj.fromJSON(status.toLowerCase) },
-  { case status: T => JString(status.getClass.getSimpleName.replace("$", "")) }))
+  { case status: T => JString(status.getClass.getSimpleName.replace("$", "").toLowerCase) }))

@@ -1,8 +1,32 @@
 package lambda4s
 
-import org.scalatest._
+import org.json4s.NoTypeHints
+import org.json4s.native.Serialization
+import org.scalatest.{ FlatSpec, Matchers }
 
 case class User(firstName: String, lastName: String, phoneNumber: Option[String])
+
+sealed trait FooType
+case object Foo extends FooType
+case object Boo extends FooType
+object FooType extends CaseObject[FooType] {
+  override def fromJSON(item: String): FooType = {
+    item match {
+      case "foo" => Foo
+      case "boo" => Boo
+      case _     => throw new RuntimeException("BOOM!")
+    }
+  }
+}
+
+case class Thing(foo: FooType)
+
+object MyJSON extends JSON {
+  override implicit val formats = {
+    Serialization.formats(NoTypeHints) +
+      new CaseObjectSerializer(FooType)
+  }
+}
 
 class JSONTest extends FlatSpec with Matchers {
   val user = User(
@@ -12,29 +36,42 @@ class JSONTest extends FlatSpec with Matchers {
 
   val userJSON = """{"firstName":"John","lastName":"Smith","phoneNumber":"123"}"""
 
+  it should "serialize a case class to JSON" in {
+    MyJSON.toJSON(Thing(Foo)) should be("""{"foo":"foo"}""")
+    MyJSON.toJSON(Thing(Boo)) should be("""{"foo":"boo"}""")
+  }
+
+  it should "deserialize a case class from JSON" in {
+    MyJSON.fromJSON[Thing]("""{"foo":"foo"}""") should be(Thing(Foo))
+    MyJSON.fromJSON[Thing]("""{"foo":"boo"}""") should be(Thing(Boo))
+
+    MyJSON.fromJSON[Thing]("""{"foo":"Foo"}""") should be(Thing(Foo))
+    MyJSON.fromJSON[Thing]("""{"foo":"Boo"}""") should be(Thing(Boo))
+  }
+
   it should "serialize a User to JSON" in {
-    JSON.toJSON(user) should be(userJSON)
+    MyJSON.toJSON(user) should be(userJSON)
   }
 
   it should "deserialize a User from JSON" in {
-    JSON.fromJSON[User](userJSON) should be(user)
+    MyJSON.fromJSON[User](userJSON) should be(user)
   }
 
   it should "be able to deserialize what it serializes" in {
-    JSON.fromJSON[User](JSON.toJSON(user)) should be(user)
+    MyJSON.fromJSON[User](MyJSON.toJSON(user)) should be(user)
   }
 
   it should "parse json as a Map" in {
     case class Stuff(a: String, b: String)
-    JSON.fromJSON[Map[String, _]]("""{ "a": "foo", "b": "bar" }""") should be(Map("a" -> "foo", "b" -> "bar"))
+    MyJSON.fromJSON[Map[String, _]]("""{ "a": "foo", "b": "bar" }""") should be(Map("a" -> "foo", "b" -> "bar"))
   }
 
   it should "serialize fields with value set to None" in {
     val person = User("John", "Smith", None)
 
     val json = """{"firstName":"John","lastName":"Smith"}"""
-    JSON.toJSON(person) should be(json)
-    JSON.fromJSON[User](json) should be(person)
+    MyJSON.toJSON(person) should be(json)
+    MyJSON.fromJSON[User](json) should be(person)
   }
 
   // from a real Lambda request, with PII scrubbed
@@ -96,7 +133,7 @@ class JSONTest extends FlatSpec with Matchers {
          "isBase64Encoded":false
          }"""
 
-    noException should be thrownBy { JSON.fromJSON[Request](json)}
+    noException should be thrownBy { MyJSON.fromJSON[Request](json) }
   }
 
 }
