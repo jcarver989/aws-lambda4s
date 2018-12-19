@@ -4,7 +4,7 @@ abstract class Route(httpMethod: String) {
   def unapplySeq(request: Request): Option[List[String]] = {
     request.httpMethod match {
       case `httpMethod` => Some(splitPath(request))
-      case _            => None
+      case _ => None
     }
   }
 
@@ -27,3 +27,4 @@ object Get extends Route("GET")
 object Post extends Route("POST")
 object Put extends Route("PUT")
 object Delete extends Route("DELETE")
+object Options extends Route("OPTIONS")

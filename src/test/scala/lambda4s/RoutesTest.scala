@@ -7,7 +7,7 @@ class RoutesTest extends FlatSpec with Matchers {
   it should "match a GET route" in {
     val matched = Request(httpMethod = "GET", path = "/api/v1/login") match {
       case Get("api", "v1", "login") => true
-      case _                         => false
+      case _ => false
     }
 
     matched should be(true)
@@ -16,7 +16,7 @@ class RoutesTest extends FlatSpec with Matchers {
   it should "match a POST route" in {
     val matched = Request(httpMethod = "POST", path = "/api/v1/login") match {
       case Post("api", "v1", "login") => true
-      case _                          => false
+      case _ => false
     }
 
     matched should be(true)
@@ -25,7 +25,7 @@ class RoutesTest extends FlatSpec with Matchers {
   it should "match a PUT route" in {
     val matched = Request(httpMethod = "PUT", path = "/api/v1/login") match {
       case Put("api", "v1", "login") => true
-      case _                         => false
+      case _ => false
     }
 
     matched should be(true)
@@ -34,7 +34,16 @@ class RoutesTest extends FlatSpec with Matchers {
   it should "match a DELETE route" in {
     val matched = Request(httpMethod = "DELETE", path = "/api/v1/login") match {
       case Delete("api", "v1", "login") => true
-      case _                            => false
+      case _ => false
+    }
+
+    matched should be(true)
+  }
+
+  it should "match an OPTIONS route" in {
+    val matched = Request(httpMethod = "OPTIONS", path = "/api/v1/login") match {
+      case Options(_*) => true
+      case _ => false
     }
 
     matched should be(true)
