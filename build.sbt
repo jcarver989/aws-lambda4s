@@ -1,6 +1,6 @@
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.8"
 name := "aws-lambda4s"
-version := "1.0.6"
+version := "1.0.8"
 organization := "com.jcarver989"
 
 licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))
